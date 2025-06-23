@@ -29,7 +29,11 @@ const filterOptions = [
   { value: "none", label: "All" },
 ];
 
-export default function SidePanel() {
+interface SidePanelProps {
+  embedded?: boolean;
+}
+
+export default function SidePanel({ embedded = false }: SidePanelProps) {
   const { connected, client } = useLiveAPIContext();
   const [open, setOpen] = useState(true);
   const loggerRef = useRef<HTMLDivElement>(null);
@@ -73,19 +77,21 @@ export default function SidePanel() {
   };
 
   return (
-    <div className={`side-panel ${open ? "open" : ""}`}>
-      <header className="top">
-        <h2>Console</h2>
-        {open ? (
-          <button className="opener" onClick={() => setOpen(false)}>
-            <RiSidebarFoldLine color="#b4b8bb" />
-          </button>
-        ) : (
-          <button className="opener" onClick={() => setOpen(true)}>
-            <RiSidebarUnfoldLine color="#b4b8bb" />
-          </button>
-        )}
-      </header>
+    <div className={`side-panel ${embedded ? "embedded" : ""} ${open ? "open" : ""}`}>
+      {!embedded && (
+        <header className="top">
+          <h2>Console</h2>
+          {open ? (
+            <button className="opener" onClick={() => setOpen(false)}>
+              <RiSidebarFoldLine color="#b4b8bb" />
+            </button>
+          ) : (
+            <button className="opener" onClick={() => setOpen(true)}>
+              <RiSidebarUnfoldLine color="#b4b8bb" />
+            </button>
+          )}
+        </header>
+      )}
       <section className="indicators">
         <Select
           className="react-select"

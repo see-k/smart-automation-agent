@@ -14,55 +14,202 @@
  * limitations under the License.
  */
 
-/* stylelint-disable */
 .audioPulse {
+  position: relative;
   display: flex;
-  width: 24px;
-  justify-content: space-evenly;
   align-items: center;
-  transition: all 0.5s;
-
-  & > div {
-    background-color: var(--Neutral-30);
-    border-radius: 1000px;
-    width: 4px;
-    min-height: 4px;
-    border-radius: 1000px;
-    transition: height 0.1s;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  
+  &:hover {
+    transform: scale(1.05);
   }
-
-  &.hover > div {
-    animation: hover 1.4s infinite alternate ease-in-out;
-  }
-
-  height: 4px;
-  transition: opacity 0.333s;
-
+  
   &.active {
+    // No background styling, just let the visualization show
+  }
+  
+  // Adjust container for bars and waveform modes
+  &:has(.bars-container), &:has(.waveform-container) {
+    width: 60px;
+    border-radius: 8px;
+  }
+}
+
+/* Bars Visualization */
+.bars-container {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  gap: 3px;
+  height: 24px;
+  width: 100%;
+}
+
+.frequency-bar {
+  width: 3px;
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 212, 255, 0.3),
+    rgba(124, 58, 237, 0.6),
+    rgba(0, 212, 255, 0.9)
+  );
+  transition: all 0.1s ease;
+  animation: barPulse 1.5s ease-in-out infinite;
+  animation-delay: calc(var(--bar-index) * 0.1s);
+  
+  .audioPulse.active & {
+    background: linear-gradient(
+      to top,
+      rgba(0, 212, 255, 0.6),
+      rgba(124, 58, 237, 0.8),
+      rgba(0, 212, 255, 1)
+    );
+    box-shadow: 0 0 6px rgba(0, 212, 255, 0.4);
+  }
+  
+  .audioPulse.hover & {
+    animation-duration: 0.8s;
+  }
+}
+
+/* Waveform Visualization */
+.waveform-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  height: 24px;
+  width: 100%;
+}
+
+.waveform-point {
+  width: 1.5px;
+  height: 2px;
+  border-radius: 1px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 212, 255, 0.4),
+    rgba(124, 58, 237, 0.7)
+  );
+  transition: all 0.05s ease;
+  
+  .audioPulse.active & {
+    background: linear-gradient(
+      to top,
+      rgba(0, 212, 255, 0.8),
+      rgba(124, 58, 237, 1)
+    );
+    box-shadow: 0 0 2px rgba(0, 212, 255, 0.3);
+  }
+}
+
+/* Circular Visualization */
+.circular-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.circular-canvas {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50%;
+  background: transparent;
+}
+
+/* Visualization Mode Indicator */
+.visualization-indicator {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  display: flex;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  
+  .audioPulse:hover & {
     opacity: 1;
-
-    & > div {
-      background-color: var(--Neutral-80);
-    }
   }
 }
 
-@keyframes hover {
-  from {
-    transform: translateY(0);
-  }
-
-  to {
-    transform: translateY(-3.5px);
+.mode-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transition: all 0.2s ease;
+  
+  &.active {
+    background: rgba(0, 212, 255, 0.8);
+    box-shadow: 0 0 4px rgba(0, 212, 255, 0.4);
   }
 }
 
-@keyframes pulse {
-  from {
-    scale: 1 1;
+/* Enhanced Animations */
+@keyframes barPulse {
+  0%, 100% {
+    transform: scaleY(0.3);
+    opacity: 0.6;
   }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
 
-  to {
-    scale: 1.2 1.2;
+@keyframes waveRipple {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes circularPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .audioPulse {
+    width: 50px;
+    height: 35px;
+  }
+  
+  .bars-container {
+    height: 20px;
+  }
+  
+  .frequency-bar {
+    width: 2.5px;
+  }
+  
+  .waveform-container {
+    height: 20px;
+  }
+  
+  .waveform-point {
+    width: 1px;
   }
 }
